@@ -62,7 +62,7 @@ Clarinet.test({
 });
 
 Clarinet.test({
-  name: "Test initiative funding flow",
+  name: "Test initiative funding flow with rewards",
   async fn(chain: Chain, accounts: Map<string, Account>) {
     const deployer = accounts.get('deployer')!;
     const wallet1 = accounts.get('wallet_1')!;
@@ -76,7 +76,7 @@ Clarinet.test({
         types.uint(0)
       ], deployer.address),
       Tx.contractCall('eco-vault', 'deposit', [
-        types.uint(1000)
+        types.uint(2000)
       ], wallet1.address)
     ]);
     
@@ -84,20 +84,20 @@ Clarinet.test({
     let fundBlock = chain.mineBlock([
       Tx.contractCall('eco-vault', 'fund-initiative', [
         types.uint(0),
-        types.uint(500)
+        types.uint(1500)
       ], wallet1.address)
     ]);
     
-    fundBlock.receipts[0].result.expectOk().expectBool(true);
+    // Should earn 5% rewards
+    fundBlock.receipts[0].result.expectOk().expectUint(75);
     
-    // Check initiative details
-    let detailsBlock = chain.mineBlock([
-      Tx.contractCall('eco-vault', 'get-initiative-details', [
-        types.uint(0)
+    // Check vault rewards
+    let rewardsBlock = chain.mineBlock([
+      Tx.contractCall('eco-vault', 'get-vault-rewards', [
+        types.principal(wallet1.address)
       ], wallet1.address)
     ]);
     
-    let details = detailsBlock.receipts[0].result.expectSome();
-    assertEquals(details['total-funding'], types.uint(500));
+    assertEquals(rewardsBlock.receipts[0].result, types.uint(75));
   },
 });
