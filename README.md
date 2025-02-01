@@ -8,6 +8,8 @@ A decentralized savings app that rounds up purchases to fund eco-friendly initia
 - View total contributions 
 - Allocate funds to eco initiatives
 - View initiative funding metrics
+- Earn rewards for significant initiative contributions
+- Track contributor metrics per initiative
 
 ## Architecture
 The smart contract handles:
@@ -15,3 +17,12 @@ The smart contract handles:
 - Fund allocation logic
 - Initiative registration and verification
 - Time-locked withdrawals
+- Rewards distribution for large contributions
+- Contributor tracking per initiative
+
+## Rewards System
+Users who contribute above the rewards threshold (1000 microSTX) to initiatives receive:
+- 5% rewards on their contribution
+- Rewards are tracked per user vault
+- Total rewards distribution is monitored contract-wide
+- Initiative contributor counts are tracked
